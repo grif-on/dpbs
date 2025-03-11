@@ -1,0 +1,9 @@
+# Compiled files
+*.zip
+
+# Folders with intermediate files
+output/
+cache/
+
+# GameMaker user licence file
+licence.plist
