@@ -1,7 +1,7 @@
-New-Item -Path "temp" -ItemType Directory
+New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore
 
-Remove-Item -Path ".\Delirium.zip" -Force
-Remove-Item -Path ".\temp\output" -Recurse -Force
+Remove-Item -Path ".\Delirium.zip" -Force -ErrorAction Ignore
+Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
 
 Set-Location "./temp"
 & "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="V:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" Windows PackageZip
