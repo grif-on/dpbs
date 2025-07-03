@@ -1,0 +1,10 @@
+{
+  "gamemaker_compiler": "C:/ProgramData/GameMakerStudio2/Cache/runtimes/< runtime version >/bin/igor/windows/x64/Igor.exe",
+  "license_file": "C:/Users/< your windows username >/AppData/Roaming/GameMakerStudio2/< your gamemaker id >/licence.plist",
+  "project_file": "V:/git/< name >/< name >.yyp",
+  "visual_studio_tools": "V:/Programs/VS/2022/Community/Common7/Tools/VsDevCmd.bat (if you don't need YYC then leave it empty)",
+  "7zip": "V:/Programs/7-Zip/7z.exe",
+  "subdirectory_in_archive": false,
+  "additional_directories_to_include": ["V:/git/< other name 1 >", "V:/git/< other name 2 >", "V:/git/< other name 3 >"],
+  "use_assets_cache": true
+}

@@ -1,3 +1,11 @@
+#region Functions
+
+
+#endregion Functions
+
+
+#region Main script part
+
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore
 
 Remove-Item -Path ".\Delirium.zip" -Force -ErrorAction Ignore
@@ -24,3 +32,5 @@ Copy-Item -Path "D:\Dropbox\Characters" -Destination ".\temp\output\Delirium\Cha
 
 Remove-Item -Path ".\temp" -Recurse -Force
 Remove-Item -Path "./temp/local_settings.json" -Force
+
+#endregion Main script part
