@@ -8,8 +8,7 @@
 
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore
 
-Remove-Item -Path ".\Delirium.zip" -Force -ErrorAction Ignore
-Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
+Remove-Item -Path ".\output" -Recurse -Force -ErrorAction Ignore
 
 # Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
 Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + "V:/Programs/VS/2022/Community/Common7/Tools/VsDevCmd.bat" + "`" }")
@@ -28,7 +27,7 @@ Copy-Item -Path "V:\git\Mapping" -Destination ".\temp\output\Delirium\Mapping" -
 Copy-Item -Path "D:\Dropbox\Moosor" -Destination ".\temp\output\Delirium\Moosor" -Recurse -Force
 Copy-Item -Path "D:\Dropbox\Characters" -Destination ".\temp\output\Delirium\Characters" -Recurse -Force
 
-& "D:\Programs\7-Zip\7z.exe" a ".\Delirium.zip" ".\temp\output\Delirium"
+Move-Item -Path "./temp/output" -Destination "./output" -Recurse -Force
 
 Remove-Item -Path ".\temp" -Recurse -Force
 Remove-Item -Path "./temp/local_settings.json" -Force
