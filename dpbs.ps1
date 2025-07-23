@@ -13,7 +13,7 @@ if ($clear_assets_cache) {
 }
 
 # Creation of temp directory should be unconditional , in case user delete it manually
-New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore
+New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 
 Remove-Item -Path ".\output" -Recurse -Force -ErrorAction Ignore
 
