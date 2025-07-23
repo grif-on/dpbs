@@ -15,6 +15,7 @@ if ($clear_assets_cache) {
 # Creation of temp directory should be unconditional , in case user delete it manually
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 
+Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path ".\output" -Recurse -Force -ErrorAction Ignore
 
 # Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
