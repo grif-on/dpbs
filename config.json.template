@@ -4,5 +4,5 @@
   "project_file": "V:/git/< name >/< name >.yyp",
   "visual_studio_tools": "V:/Programs/VS/2022/Community/Common7/Tools/VsDevCmd.bat (if you don't need YYC then leave it empty)",
   "additional_directories_to_include": ["V:/git/< other name 1 >", "V:/git/< other name 2 >", "V:/git/< other name 3 >"],
-  "use_assets_cache": true
+  "use_assets_cache": false
 }

@@ -6,6 +6,12 @@
 
 #region Main script part
 
+$clear_assets_cache = $true
+
+if ($clear_assets_cache) {
+	Remove-Item -Path ".\temp" -Recurse -Force -ErrorAction Ignore
+}
+
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore
 
 Remove-Item -Path ".\output" -Recurse -Force -ErrorAction Ignore
@@ -28,8 +34,5 @@ Copy-Item -Path "D:\Dropbox\Moosor" -Destination ".\temp\output\Delirium\Moosor"
 Copy-Item -Path "D:\Dropbox\Characters" -Destination ".\temp\output\Delirium\Characters" -Recurse -Force
 
 Move-Item -Path "./temp/output" -Destination "./output" -Recurse -Force
-
-Remove-Item -Path ".\temp" -Recurse -Force
-Remove-Item -Path "./temp/local_settings.json" -Force
 
 #endregion Main script part
