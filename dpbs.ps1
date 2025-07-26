@@ -18,6 +18,8 @@ New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path ".\output" -Recurse -Force -ErrorAction Ignore
 
+$note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
+
 # Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
 Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat" + "`" }")
 
@@ -25,11 +27,12 @@ try {
 	Set-Location "./temp"
 	
 	& "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="D:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" Windows PackageZip > compile_log_vm.txt
+	# New-Item -Path "output/" -ItemType Directory > $null
+	Write-Output $note_about_intentional_error >> compile_log_vm.txt
 	
 	# & "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="D:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" --runtime=YYC Windows PackageZip > compile_log_yyc.txt
-	
-	Write-Host "`nPlease , don't mind the `"Empty file name is not legal`" error ."
-	Write-Host "As far as i can tell , this is the only way to make gamemaker skip zipping of files :)`n"
+	# New-Item -Path "output/" -ItemType Directory > $null
+	Write-Output $note_about_intentional_error >> compile_log_yyc.txt
 } finally {
 	Set-Location ".."
 }
