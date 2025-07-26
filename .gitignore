@@ -1,5 +1,6 @@
 # Compiled files
-output/
+output_vm/
+output_yyc/
 
 # Directory with intermediate files
 temp/
