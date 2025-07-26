@@ -30,6 +30,10 @@ Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.P
 try {
 	Set-Location "./temp"
 	
+	# Gamemaker macro-expanse (sets) GM_build_date somewhere on the start of compilation .
+	# And since VM compiles faster than YYC , compiling VM first and then YYC will make their GM_build_date more closer to each others .
+	# In other words - difference of GM_build_date inside VM and YYC data.win files is a roughly a time spent on compiling first thing .
+	
 	printCurrentTime
 	Write-Output "Compiling VM ..."
 	& "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="D:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" Windows PackageZip > compile_log_vm.txt
