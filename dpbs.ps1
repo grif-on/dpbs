@@ -1,5 +1,10 @@
 #region Functions
 
+function addAdditionalContent([string] $destination) {
+	Copy-Item -Path "D:\git\Mapping" -Destination "$destination\Delirium\Mapping" -Recurse -Force
+	Copy-Item -Path "D:\Dropbox\Moosor" -Destination "$destination\Delirium\Moosor" -Recurse -Force
+}
+
 function printCurrentTime() {
 	Write-Output "$((Get-Date).Hour):$((Get-Date).Minute):$((Get-Date).Second)"	
 }
@@ -57,7 +62,7 @@ try {
 	Set-Location ".."
 }
 
-Copy-Item -Path "D:\git\Mapping" -Destination ".\temp\output\Delirium\Mapping" -Recurse -Force
-Copy-Item -Path "D:\Dropbox\Moosor" -Destination ".\temp\output\Delirium\Moosor" -Recurse -Force
+addAdditionalContent -destination ".\output_vm\"
+addAdditionalContent -destination ".\output_yyc\"
 
 #endregion Main script part
