@@ -17,15 +17,25 @@ function printCurrentTime() {
 $clear_assets_cache = $true
 
 if ($clear_assets_cache) {
+	Write-Output "Cleaning up asset cache ..."
 	Remove-Item -Path ".\temp" -Recurse -Force -ErrorAction Ignore
+	Write-Output "done`n"
+} else {
+	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) {
+		Write-Output "Old cache : found`n"
+	} else {
+		Write-Output "Old cache : no`n"
+	}
 }
 
 # Creation of temp directory should be unconditional , in case user delete it manually
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 
+Write-Output "Cleaning up old builds ..."
 Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path ".\output_vm" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path ".\output_yyc" -Recurse -Force -ErrorAction Ignore
+Write-Output "done`n"
 
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
 
@@ -62,7 +72,9 @@ try {
 	Set-Location ".."
 }
 
+Write-Output "Adding additional content ..."
 addAdditionalContent -destination ".\output_vm\"
 addAdditionalContent -destination ".\output_yyc\"
+Write-Output "done`n"
 
 #endregion Main script part
