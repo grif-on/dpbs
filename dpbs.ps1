@@ -28,7 +28,7 @@ if ($config.use_assets_cache) {
 		Write-Output "Old cache : no`n"
 	}
 } else {
-	Write-Output "Cleaning up asset cache ..."
+	Write-Output "Cleaning up assets cache ..."
 	Remove-Item -Path "./temp" -Recurse -Force -ErrorAction Ignore
 	Write-Output "done`n"
 }
