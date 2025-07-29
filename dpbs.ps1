@@ -21,25 +21,25 @@ $compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
 $runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
 Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime -Value $($runtime_path_parts -join "/")
 
-if (!$config.use_assets_cache) {
-	Write-Output "Cleaning up asset cache ..."
-	Remove-Item -Path ".\temp" -Recurse -Force -ErrorAction Ignore
-	Write-Output "done`n"
-} else {
+if ($config.use_assets_cache) {
 	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) {
 		Write-Output "Old cache : found`n"
 	} else {
 		Write-Output "Old cache : no`n"
 	}
+} else {
+	Write-Output "Cleaning up asset cache ..."
+	Remove-Item -Path "./temp" -Recurse -Force -ErrorAction Ignore
+	Write-Output "done`n"
 }
 
 # Creation of temp directory should be unconditional , in case user delete it manually
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 
 Write-Output "Cleaning up old builds ..."
-Remove-Item -Path ".\temp\output" -Recurse -Force -ErrorAction Ignore
-Remove-Item -Path ".\output_vm" -Recurse -Force -ErrorAction Ignore
-Remove-Item -Path ".\output_yyc" -Recurse -Force -ErrorAction Ignore
+Remove-Item -Path "./temp/output" -Recurse -Force -ErrorAction Ignore
+Remove-Item -Path "./output_vm" -Recurse -Force -ErrorAction Ignore
+Remove-Item -Path "./output_yyc" -Recurse -Force -ErrorAction Ignore
 Write-Output "done`n"
 
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
@@ -56,9 +56,9 @@ try {
 	
 	printCurrentTime
 	Write-Output "Compiling VM ..."
-	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > compile_log_vm.txt
+	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > "compile_log_vm.txt"
 	# New-Item -Path "output/" -ItemType Directory > $null
-	Write-Output $note_about_intentional_error >> compile_log_vm.txt
+	Write-Output $note_about_intentional_error >> "compile_log_vm.txt"
 	printCurrentTime
 	
 	Move-Item -Path "./output/" -Destination "../output_vm"
@@ -66,9 +66,9 @@ try {
 	
 	printCurrentTime
 	Write-Output "Compiling YYC ..."
-	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > compile_log_yyc.txt
+	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > "compile_log_yyc.txt"
 	# New-Item -Path "output/" -ItemType Directory > $null
-	Write-Output $note_about_intentional_error >> compile_log_yyc.txt
+	Write-Output $note_about_intentional_error >> "compile_log_yyc.txt"
 	printCurrentTime
 	
 	Move-Item -Path "./output/" -Destination "../output_yyc"
