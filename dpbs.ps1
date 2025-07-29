@@ -29,7 +29,8 @@ function addAdditionalContent([string] $destination, $content_paths) {
 }
 
 function printCurrentTime() {
-	Write-Output "$((Get-Date).Hour):$((Get-Date).Minute):$((Get-Date).Second)"	
+	$date = Get-Date 
+	Write-Output "$($date.Hour):$($date.Minute):$($date.Second)"	
 }
 
 #endregion Functions
