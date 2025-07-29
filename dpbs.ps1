@@ -1,3 +1,25 @@
+#region Arguments
+
+param (
+	[switch]$CompileVM,
+	[switch]$CompileYYC
+)
+
+
+if (!($CompileVM -or $CompileYYC)) {
+	Write-Host "To use this script provide at least one of these arguments :"
+	Write-Host "-CompileVM"
+	Write-Host "-CompileYYC"
+	Write-Host ""
+	Write-Host "Note that you can combine -CompileVM and -CompileYYC in to one script call"
+	
+	exit
+	
+}
+
+#endregion Arguments
+
+
 #region Functions
 
 function addAdditionalContent([string] $destination, $content_paths) {
@@ -44,8 +66,10 @@ Write-Output "done`n"
 
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
 
-# Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
-Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + $config.visual_studio_tools + "`" }")
+if ($CompileYYC) {
+	# Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
+	Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + $config.visual_studio_tools + "`" }")
+}
 
 try {
 	Set-Location "./temp"
@@ -54,32 +78,40 @@ try {
 	# And since VM compiles faster than YYC , compiling VM first and then YYC will make their GM_build_date more closer to each others .
 	# In other words - difference of GM_build_date inside VM and YYC data.win files is a roughly a time spent on compiling first thing .
 	
-	printCurrentTime
-	Write-Output "Compiling VM ..."
-	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > "compile_log_vm.txt"
-	# New-Item -Path "output/" -ItemType Directory > $null
-	Write-Output $note_about_intentional_error >> "compile_log_vm.txt"
-	printCurrentTime
+	if ($CompileVM) {
+		printCurrentTime
+		Write-Output "Compiling VM ..."
+		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > "compile_log_vm.txt"
+		# New-Item -Path "output/" -ItemType Directory > $null
+		Write-Output $note_about_intentional_error >> "compile_log_vm.txt"
+		printCurrentTime
+		
+		Move-Item -Path "./output/" -Destination "../output_vm"
+		Write-Output "done`n"
+	}
 	
-	Move-Item -Path "./output/" -Destination "../output_vm"
-	Write-Output "done`n"
-	
-	printCurrentTime
-	Write-Output "Compiling YYC ..."
-	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > "compile_log_yyc.txt"
-	# New-Item -Path "output/" -ItemType Directory > $null
-	Write-Output $note_about_intentional_error >> "compile_log_yyc.txt"
-	printCurrentTime
-	
-	Move-Item -Path "./output/" -Destination "../output_yyc"
-	Write-Output "done`n"
+	if ($CompileYYC) {
+		printCurrentTime
+		Write-Output "Compiling YYC ..."
+		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > "compile_log_yyc.txt"
+		# New-Item -Path "output/" -ItemType Directory > $null
+		Write-Output $note_about_intentional_error >> "compile_log_yyc.txt"
+		printCurrentTime
+		
+		Move-Item -Path "./output/" -Destination "../output_yyc"
+		Write-Output "done`n"
+	}
 } finally {
 	Set-Location ".."
 }
 
 Write-Output "Adding additional content ..."
-addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
-addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
+if ($CompileVM) {
+	addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
+}
+if ($CompileYYC) {
+	addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
+}
 Write-Output "done`n"
 
 #endregion Main script part
