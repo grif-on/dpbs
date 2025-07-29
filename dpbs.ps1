@@ -1,8 +1,9 @@
 #region Functions
 
-function addAdditionalContent([string] $destination) {
-	Copy-Item -Path "D:\git\Mapping" -Destination "$destination\Delirium\Mapping" -Recurse -Force
-	Copy-Item -Path "D:\Dropbox\Moosor" -Destination "$destination\Delirium\Moosor" -Recurse -Force
+function addAdditionalContent([string] $destination, $content_paths) {
+	foreach ($path in $content_paths.PSObject.Properties) {
+		Copy-Item -Path $path.Name -Destination "$($destination)/$($path.Value)" -Recurse -Force
+	}
 }
 
 function printCurrentTime() {
@@ -14,9 +15,13 @@ function printCurrentTime() {
 
 #region Main script part
 
-$clear_assets_cache = $true
+$config = ConvertFrom-Json -InputObject (Get-Content -Path "config.json" -Raw)
 
-if ($clear_assets_cache) {
+$compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
+$runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
+Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime -Value $($runtime_path_parts -join "/")
+
+if (!$config.use_assets_cache) {
 	Write-Output "Cleaning up asset cache ..."
 	Remove-Item -Path ".\temp" -Recurse -Force -ErrorAction Ignore
 	Write-Output "done`n"
@@ -40,7 +45,7 @@ Write-Output "done`n"
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
 
 # Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
-Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat" + "`" }")
+Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + $config.visual_studio_tools + "`" }")
 
 try {
 	Set-Location "./temp"
@@ -51,7 +56,7 @@ try {
 	
 	printCurrentTime
 	Write-Output "Compiling VM ..."
-	& "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="D:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" Windows PackageZip > compile_log_vm.txt
+	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > compile_log_vm.txt
 	# New-Item -Path "output/" -ItemType Directory > $null
 	Write-Output $note_about_intentional_error >> compile_log_vm.txt
 	printCurrentTime
@@ -61,7 +66,7 @@ try {
 	
 	printCurrentTime
 	Write-Output "Compiling YYC ..."
-	& "C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160\bin\igor\windows\x64\Igor.exe" --project="D:\git\Delirium\Delirium.yyp" --rp="C:\ProgramData\GameMakerStudio2\Cache\runtimes\runtime-2023.11.1.160" --lf="..\licence.plist" --runtime=YYC Windows PackageZip > compile_log_yyc.txt
+	& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > compile_log_yyc.txt
 	# New-Item -Path "output/" -ItemType Directory > $null
 	Write-Output $note_about_intentional_error >> compile_log_yyc.txt
 	printCurrentTime
@@ -73,8 +78,8 @@ try {
 }
 
 Write-Output "Adding additional content ..."
-addAdditionalContent -destination ".\output_vm\"
-addAdditionalContent -destination ".\output_yyc\"
+addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
+addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
 Write-Output "done`n"
 
 #endregion Main script part

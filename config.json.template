@@ -1,8 +1,13 @@
 {
   "gamemaker_compiler": "C:/ProgramData/GameMakerStudio2/Cache/runtimes/< runtime version >/bin/igor/windows/x64/Igor.exe",
   "licence_file": "C:/Users/< your windows username >/AppData/Roaming/GameMakerStudio2/< your gamemaker id >/licence.plist",
-  "project_file": "V:/git/< name >/< name >.yyp",
+  "project_file": "V:/git/< project name >/< project name >.yyp",
   "visual_studio_tools": "V:/Programs/VS/2022/Community/Common7/Tools/VsDevCmd.bat (if you don't need YYC then leave it empty)",
-  "additional_directories_to_include": ["V:/git/< other name 1 >", "V:/git/< other name 2 >", "V:/git/< other name 3 >"],
+  "additional_directories_to_include": {
+    "source": "destination relative to output folder",
+    "D:/git/Mapping/": "./< project name >/Mapping/",
+    "D:/Dropbox/Moosor/": "./< project name >/Moosor/",
+    "if you don't need this functional then just asign { } to additional_directories_to_include": ""
+  },
   "use_assets_cache": false
 }
