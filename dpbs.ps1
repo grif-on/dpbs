@@ -2,19 +2,26 @@
 
 param (
 	[switch]$CompileVM,
-	[switch]$CompileYYC
+	[switch]$CompileYYC,
+	[switch]$CleanUp
 )
 
-
-if (!($CompileVM -or $CompileYYC)) {
+if (!($CompileVM -or $CompileYYC -or $CleanUp)) {
 	Write-Host "To use this script provide at least one of these arguments :"
 	Write-Host "-CompileVM"
 	Write-Host "-CompileYYC"
+	Write-Host "-CleanUp"
 	Write-Host ""
 	Write-Host "Note that you can combine -CompileVM and -CompileYYC in to one script call"
 	
 	exit
 	
+}
+
+# Ignore clean up argument if already got compilation argument(s)
+if ($CompileVM -or $CompileYYC) {
+	Write-Host "Note - you can't use -CleanUp and compile project at the same time !`n"
+	$CleanUp = $false
 }
 
 #endregion Arguments
@@ -67,7 +74,7 @@ Write-Output "done`n"
 
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
 
-if ($CompileYYC) {
+if (!$CleanUp -and $CompileYYC) {
 	# Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
 	Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + $config.visual_studio_tools + "`" }")
 }
@@ -106,13 +113,15 @@ try {
 	Set-Location ".."
 }
 
-Write-Output "Adding additional content ..."
-if ($CompileVM) {
-	addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
+if (!$CleanUp) {
+	Write-Output "Adding additional content ..."
+	if ($CompileVM) {
+		addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
+	}
+	if ($CompileYYC) {
+		addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
+	}
+	Write-Output "done`n"
 }
-if ($CompileYYC) {
-	addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
-}
-Write-Output "done`n"
 
 #endregion Main script part
