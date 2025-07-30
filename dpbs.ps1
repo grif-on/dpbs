@@ -37,7 +37,7 @@ function addAdditionalContent([string] $destination, $content_paths) {
 
 function printCurrentTime() {
 	$date = Get-Date 
-	Write-Output "$($date.Hour):$($date.Minute):$($date.Second)"	
+	Write-Host "$($date.Hour):$($date.Minute):$($date.Second)"	
 }
 
 #endregion Functions
@@ -53,24 +53,24 @@ Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime
 
 if ($config.use_assets_cache) {
 	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) {
-		Write-Output "Old cache : found`n"
+		Write-Host "Old cache : found`n"
 	} else {
-		Write-Output "Old cache : no`n"
+		Write-Host "Old cache : no`n"
 	}
 } else {
-	Write-Output "Cleaning up assets cache ..."
+	Write-Host "Cleaning up assets cache ..."
 	Remove-Item -Path "./temp" -Recurse -Force -ErrorAction Ignore
-	Write-Output "done`n"
+	Write-Host "DONE`n"
 }
 
 # Creation of temp directory should be unconditional , in case user delete it manually
 New-Item -Path "temp" -ItemType Directory -ErrorAction Ignore > $null
 
-Write-Output "Cleaning up old builds ..."
+Write-Host "Cleaning up old builds ..."
 Remove-Item -Path "./temp/output" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path "./output_vm" -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path "./output_yyc" -Recurse -Force -ErrorAction Ignore
-Write-Output "done`n"
+Write-Host "DONE`n"
 
 $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is not legal`" error .`nAs far as i can tell , this is the only way to make gamemaker skip zipping of files :)"
 
@@ -88,40 +88,40 @@ try {
 	
 	if ($CompileVM) {
 		printCurrentTime
-		Write-Output "Compiling VM ..."
+		Write-Host "Compiling VM ..."
 		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > "compile_log_vm.txt"
 		# New-Item -Path "output/" -ItemType Directory > $null
-		Write-Output $note_about_intentional_error >> "compile_log_vm.txt"
+		Write-Host $note_about_intentional_error >> "compile_log_vm.txt"
 		printCurrentTime
 		
 		Move-Item -Path "./output/" -Destination "../output_vm"
-		Write-Output "done`n"
+		Write-Host "DONE`n"
 	}
 	
 	if ($CompileYYC) {
 		printCurrentTime
-		Write-Output "Compiling YYC ..."
+		Write-Host "Compiling YYC ..."
 		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > "compile_log_yyc.txt"
 		# New-Item -Path "output/" -ItemType Directory > $null
-		Write-Output $note_about_intentional_error >> "compile_log_yyc.txt"
+		Write-Host $note_about_intentional_error >> "compile_log_yyc.txt"
 		printCurrentTime
 		
 		Move-Item -Path "./output/" -Destination "../output_yyc"
-		Write-Output "done`n"
+		Write-Host "DONE`n"
 	}
 } finally {
 	Set-Location ".."
 }
 
 if (!$CleanUp) {
-	Write-Output "Adding additional content ..."
+	Write-Host "Adding additional content ..."
 	if ($CompileVM) {
 		addAdditionalContent -destination "./output_vm/" -content_paths $config.additional_directories_to_include
 	}
 	if ($CompileYYC) {
 		addAdditionalContent -destination "./output_yyc/" -content_paths $config.additional_directories_to_include
 	}
-	Write-Output "done`n"
+	Write-Host "DONE`n"
 }
 
 #endregion Main script part
