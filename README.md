@@ -9,7 +9,7 @@ Installation of runtimes and obtaining a license token is intended to be done vi
 
 ### IMPORTANT :
 If you are using the [steamworks GameMaker extension](https://github.com/YoYoGames/GMEXT-Steamworks) - you need to either :
- - Ensure that you have steamworks extension version 2.1.3 or higher (it contains an important bug fix) .
+ - Ensure that you have steamworks extension version 2.1.3 or higher (it contains an important bugfix) .
  - Alternatively , if you need to use version 2.1.2 or lower - backport [this bugfix](https://github.com/YoYoGames/GMEXT-Steamworks/commit/962c208c794935c1dd262df2d2c5840a198b8272) that prevents modern powershell from going nuts (detailed info about the bug are [here](https://github.com/YoYoGames/GMEXT-Steamworks/issues/120)) . In other words , just add the line from the bugfix to your extension file .
 
 ### To get started :
