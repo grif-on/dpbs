@@ -32,4 +32,4 @@ If you are using [steamworks GameMaker extension](https://github.com/YoYoGames/G
 			"D:/Dropbox/Moosor/": "./< project name >/Moosor/"
 		}
 	
-- Seting of `use_assets_cache` to `true` will speed up second and subsequent builds . But be aware that gamemaker can mess up cached assets (for various resons) , it is advised to keep this setting on `false` for production builds .
+- Seting of `use_assets_cache` to `true` will speed up second and subsequent builds . But be aware that gamemaker can mess up cached assets (for various resons) , so it is advised to keep this setting on `false` for production builds .
