@@ -24,7 +24,7 @@ If you are using [steamworks GameMaker extension](https://github.com/YoYoGames/G
 - Run `dpbs.ps1 -CompileVM` or `dpbs.ps1 -CompileYYC` or `dpbs.ps1 -CompileVM -CompileYYC` in default windows powershell ("powershell 7" is also supported) .
 
 #### Optional settings :
-- `additional_directories_to_include` - these directories will be copied to output folders at the end of the script work . Here is structure and exaple how to fill it :
+- `additional_directories_to_include` - these directories will be copied to output folders at the end of the script work . Here is structure and example how to fill it :
 	
 		{
 			"source": "destination relative to output folder",
