@@ -51,6 +51,13 @@ function printCurrentTime() {
 #region Main script part
 
 if (!$CleanUp) {
+	if (!(Test-Path -Path $ConfigFilePath)) {
+		Write-Host "Can't find config file !"
+		Write-Host "Make sure that `"$ConfigFilePath`" exists .`n"
+		
+		exit
+	}
+	
 	$config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
 
 	$compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
@@ -59,7 +66,7 @@ if (!$CleanUp) {
 }
 
 if (!$CleanUp -and $config.use_assets_cache) {
-	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) {
+	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) { # todo - rewrite with Test-Path
 		Write-Host "Old cache : found`n"
 	} else {
 		Write-Host "Old cache : no`n"
