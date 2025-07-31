@@ -8,5 +8,5 @@ temp/
 # GameMaker user licence file
 licence.plist
 
-# Config filled with actual data
-config.json
+# Configs filled with actual data
+*.json

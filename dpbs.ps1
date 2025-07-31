@@ -1,9 +1,10 @@
 #region Arguments
 
 param (
-	[switch]$CompileVM,
-	[switch]$CompileYYC,
-	[switch]$CleanUp
+	[switch]$CompileVM, # Can be combined wiht -CompileYYC in a single script call
+	[switch]$CompileYYC, # Can be combined wiht -CompileVM in a single script call
+	[switch]$CleanUp, # Clean up cahce , logs and previously compiled files
+	[string]$ConfigFilePath # By default the script will use config.json near the script file , but you can supply path to different config file
 )
 
 if (!($CompileVM -or $CompileYYC -or $CleanUp)) {
@@ -22,6 +23,10 @@ if (!($CompileVM -or $CompileYYC -or $CleanUp)) {
 if ($CleanUp -and ($CompileVM -or $CompileYYC)) {
 	Write-Host "Note - you can't use -CleanUp and compile project at the same time !`n"
 	$CleanUp = $false
+}
+
+if ($ConfigFilePath -eq "") {
+	$ConfigFilePath = "config.json"
 }
 
 #endregion Arguments
@@ -45,7 +50,7 @@ function printCurrentTime() {
 
 #region Main script part
 
-$config = ConvertFrom-Json -InputObject (Get-Content -Path "config.json" -Raw)
+$config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
 
 $compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
 $runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
