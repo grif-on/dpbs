@@ -105,7 +105,7 @@ try {
 		Write-Host "Compiling VM ..."
 		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" Windows PackageZip > "compile_log_vm.txt"
 		# New-Item -Path "output/" -ItemType Directory > $null
-		Write-Host $note_about_intentional_error >> "compile_log_vm.txt"
+		Write-Output $note_about_intentional_error >> "compile_log_vm.txt"
 		printCurrentTime
 		
 		Move-Item -Path "./output/" -Destination "../output_vm"
@@ -117,7 +117,7 @@ try {
 		Write-Host "Compiling YYC ..."
 		& $config.gamemaker_compiler --project="$($config.project_file)" --rp="$($config.gamemaker_runtime)" --lf="$($config.licence_file)" --runtime=YYC Windows PackageZip > "compile_log_yyc.txt"
 		# New-Item -Path "output/" -ItemType Directory > $null
-		Write-Host $note_about_intentional_error >> "compile_log_yyc.txt"
+		Write-Output $note_about_intentional_error >> "compile_log_yyc.txt"
 		printCurrentTime
 		
 		Move-Item -Path "./output/" -Destination "../output_yyc"
