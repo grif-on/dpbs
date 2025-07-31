@@ -50,13 +50,15 @@ function printCurrentTime() {
 
 #region Main script part
 
-$config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
+if (!$CleanUp) {
+	$config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
 
-$compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
-$runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
-Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime -Value $($runtime_path_parts -join "/")
+	$compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
+	$runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
+	Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime -Value $($runtime_path_parts -join "/")
+}
 
-if ($config.use_assets_cache) {
+if (!$CleanUp -and $config.use_assets_cache) {
 	if (Get-Item -Path "./temp/cache" -ErrorAction Ignore) {
 		Write-Host "Old cache : found`n"
 	} else {
