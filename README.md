@@ -14,7 +14,7 @@ If you are using the [steamworks GameMaker extension](https://github.com/YoYoGam
 
 ### To get started :
 - Install the runtime via GameMaker IDE , and then run your game project in the IDE at least once to ensure that it is compilable .
-- Rename `config.json.template` to `config.json` .
+- Make a copy of `config.json.template` and name it `config.json` .
 - Edit values of the required fields in `config.json` :
 	- For `gamemaker_compiler` (Igor.exe) check the runtimes path located in the runtimes tab of the IDE preferences . Note that the runtime will be selected to match compiler version .
 	- For `licence_file` check `%AppData%\GameMakerStudio2\` .
