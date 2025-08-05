@@ -27,7 +27,7 @@ if ($CleanUp -and ($CompileVM -or $CompileYYC)) {
 }
 
 if ($ConfigFilePath -eq "") {
-	$ConfigFilePath = "config.json"
+	$ConfigFilePath = "./config.json"
 }
 
 #endregion Arguments
@@ -35,9 +35,10 @@ if ($ConfigFilePath -eq "") {
 
 #region Functions
 
-function addAdditionalContent([string] $destination, $content_paths) {
-	foreach ($path in $content_paths.PSObject.Properties) {
-		Copy-Item -Path $path.Name -Destination "$($destination)/$($path.Value)" -Recurse -Force
+function addAdditionalContent([string] $destination, [hashtable] $content_paths) {
+	foreach ($source_path in $content_paths.Keys) {
+		$destination_subpath = $content_paths[$source_path]
+		Copy-Item -Path $source_path -Destination "$($destination)/$($destination_subpath)" -Recurse -Force
 	}
 }
 
@@ -59,11 +60,32 @@ if (!$CleanUp) {
 		exit
 	}
 	
-	$config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
+	$raw_config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
 
+	$config = @{}
+	foreach ($pair in $raw_config.PSObject.Properties) {
+		if ($pair.Value -is [string] -or $pair.Value -is [bool]) {
+			$config[$pair.Name] = $pair.Value
+		}
+		elseif ($pair.Value -is [PSCustomObject]) {
+			$inner_hashtable = @{}
+			foreach ($inner_pair in $pair.Value.PSObject.Properties) {
+				$inner_hashtable[$inner_pair.Name] = $inner_pair.Value
+			}
+			$config[$pair.Name] = $inner_hashtable
+		}
+		else {
+			
+			Write-Error "Wrong data type in one of the config fields"
+			exit
+			
+		}
+	}
+	
 	$compiler_path_parts = $config.gamemaker_compiler.Replace("\", "/").Split("/")
 	$runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
-	Add-Member -InputObject $config -MemberType NoteProperty -Name gamemaker_runtime -Value $($runtime_path_parts -join "/")
+	$config.gamemaker_runtime = ($runtime_path_parts -join "/")
+	
 }
 
 if ($config.use_assets_cache -and !$CleanUp) {
