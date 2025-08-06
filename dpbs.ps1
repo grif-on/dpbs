@@ -13,7 +13,7 @@ if (!($CompileVM -or $CompileYYC -or $CleanUp)) {
 	Write-Host "-CompileYYC"
 	Write-Host "-CleanUp"
 	Write-Host ""
-	Write-Host "Note that you can combine -CompileVM and -CompileYYC in to one script call"
+	Write-Host "Note that you can combine -CompileVM and -CompileYYC in to one script call . This will make VM and YYC to share assets cache ."
 	
 	exit
 	

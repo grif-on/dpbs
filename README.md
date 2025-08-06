@@ -34,3 +34,4 @@ If you are using the [steamworks GameMaker extension](https://github.com/YoYoGam
 		}
 	
 - Setting of `use_assets_cache` to `true` will speed up second and subsequent builds . However , be aware that gamemaker can mess up cached assets (for various reasons) , so it is advised to keep this setting on `false` for production builds .
+- Calling a script wiht both compile arguments (`dpbs.ps1 -CompileVM -CompileYYC`) will make VM and YYC to share assets cache even when `use_assets_cache` is set to `false` . The reason for one to use such feature is to ensure that freshly compiled pair of VM and YYC builds are guaratend to have same assets errors (or abscence of them !) - if everything OK in VM then YYC is OK too , and vice-verca . Small reminder - this doesn't affect YYC code translation errors , some GML code are fine in VM and yet it can fail in YYC .
