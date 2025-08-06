@@ -3,7 +3,7 @@
 param (
 	[switch]$CompileVM, # Can be combined wiht -CompileYYC in a single script call
 	[switch]$CompileYYC, # Can be combined wiht -CompileVM in a single script call
-	[switch]$CleanUp, # Clean up cahce , logs and previously compiled files
+	[switch]$CleanUp, # Clean up cache , logs and previously compiled files
 	[string]$ConfigFilePath # By default the script will use config.json near the script file , but you can supply path to different config file
 )
 
