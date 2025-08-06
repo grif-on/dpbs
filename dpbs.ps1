@@ -158,7 +158,7 @@ $note_about_intentional_error = "`nPlease , don't mind the `"Empty file name is 
 
 if ($CompileYYC) {
 	# Igor.exe is hardcoded to read location of VsDevCmd.bat from this file
-	Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + $config.visual_studio_tools + "`" }")
+	Set-Content -NoNewline -Path "./temp/local_settings.json" -Value ("{ `"machine.Platform Settings.Windows.visual_studio_path`": `"" + ($config.visual_studio_tools).ToString().Replace("\", "/") + "`" }")
 }
 
 try {
