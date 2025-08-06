@@ -19,7 +19,7 @@ if (!($CompileVM -or $CompileYYC -or $CleanUp)) {
 	
 }
 
-# Ignore clean up argument if already got compilation argument(s)
+# Ignore compile arguments if already got clean up argument
 if ($CleanUp -and ($CompileVM -or $CompileYYC)) {
 	Write-Host "Note - you can't use -CleanUp and compile project at the same time !`n"
 	$CompileVM = $false
