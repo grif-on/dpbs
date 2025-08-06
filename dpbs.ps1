@@ -47,6 +47,17 @@ function printCurrentTime() {
 	Write-Host "$($date.Hour):$($date.Minute):$($date.Second)"	
 }
 
+function resolvePathForPairInHashtable([hashtable] $hashtable, [string] $pair_name, [switch] $in_value, [switch] $in_name) {
+	if ($in_value) {
+		$hashtable[$pair_name] = Resolve-Path -Path $hashtable[$pair_name]
+	}
+	if ($in_name) {
+		$new_pair_name = Resolve-Path -Path $pair_name
+		$hashtable[$new_pair_name] = $hashtable[$pair_name]
+		$hashtable.Remove($pair_name)
+	}
+}
+
 #endregion Functions
 
 
@@ -86,6 +97,36 @@ if (!$CleanUp) {
 	$runtime_path_parts = $compiler_path_parts[0..($compiler_path_parts.Length - 5 - 1)]
 	$config.gamemaker_runtime = ($runtime_path_parts -join "/")
 	
+	$initial_location = Get-Location
+	try {
+		$config_file_directory = Split-Path -Parent (Resolve-Path -Path $ConfigFilePath)
+		Set-Location $config_file_directory
+		
+		# We need to .Clone() Keys since we don't want to (and will not be allowed) itterate over new/chaged/deleted fields of hashtable
+		foreach ($setting_name in $config.Keys.Clone()) {
+			$setting_value = $config[$setting_name]
+			if ($setting_value -is [bool]) {
+				# not a path
+			}
+			elseif ($setting_value -is [string]) {
+				resolvePathForPairInHashtable -hashtable $config -pair_name $setting_name -in_value
+			}
+			elseif ($setting_value -is [hashtable]) {
+				foreach ($subsetting_name in $setting_value.Keys.Clone()) {
+					resolvePathForPairInHashtable -hashtable $setting_value -pair_name $subsetting_name -in_name
+				}
+			}
+			else {
+				
+				Write-Error "Wrong data type in one of the config's hastable fields"
+				exit
+				
+			}
+		}
+	}
+	finally {
+		Set-Location $initial_location
+	}
 }
 
 if ($config.use_assets_cache -and !$CleanUp) {

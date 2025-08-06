@@ -23,11 +23,12 @@ If you are using the [steamworks GameMaker extension](https://github.com/YoYoGam
 		- **Again - the VM compilation does NOT need visual studio and this field .**
 - Run `dpbs.ps1 -CompileVM` or `dpbs.ps1 -CompileYYC` or `dpbs.ps1 -CompileVM -CompileYYC` in the default windows powershell ("powershell 7" is also supported) .
 
-### Optional settings :
+### Optional settings and features :
+- All paths in config file , except right side (values) of additional_directories_to_include , can work with both - absolute paths and paths relative to config file directory .
 - `additional_directories_to_include` - these directories will be copied to output folders at the end of the script work . Here is the structure and an example of how to fill it :
 	
 		{
-			"source": "destination relative to output folder",
+			"source path (absolute or relative to config file directory)": "destination relative to output folder",
 			"D:/git/Mapping/": "./< project name >/Mapping/",
 			"D:/Dropbox/Moosor/": "./< project name >/Moosor/"
 		}
