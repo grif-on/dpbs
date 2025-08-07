@@ -112,8 +112,10 @@ if (!$CleanUp) {
 				resolvePathForPairInHashtable -hashtable $config -pair_name $setting_name -in_value
 			}
 			elseif ($setting_value -is [hashtable]) {
-				foreach ($subsetting_name in $setting_value.Keys.Clone()) {
-					resolvePathForPairInHashtable -hashtable $setting_value -pair_name $subsetting_name -in_name
+				if ($setting_value.Keys.Count -ne 0) {
+					foreach ($subsetting_name in $setting_value.Keys.Clone()) {
+						resolvePathForPairInHashtable -hashtable $setting_value -pair_name $subsetting_name -in_name
+					}
 				}
 			}
 			else {
