@@ -71,10 +71,10 @@ if (!$CleanUp) {
 		exit
 	}
 	
-	$raw_config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
+	$strict_config = ConvertFrom-Json -InputObject (Get-Content -Path $ConfigFilePath -Raw)
 
 	$config = @{}
-	foreach ($pair in $raw_config.PSObject.Properties) {
+	foreach ($pair in $strict_config.PSObject.Properties) {
 		if ($pair.Value -is [string] -or $pair.Value -is [bool]) {
 			$config[$pair.Name] = $pair.Value
 		}
